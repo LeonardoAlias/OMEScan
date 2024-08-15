@@ -29,8 +29,8 @@ public class PatientsRepo {
         return patients;
     }
 
-    public void addPatient(String name, String lastname, Long affiliatenum) {
-        Patient pat = new Patient(name, lastname, affiliatenum);
+    public void addPatient(String name, Long affiliatenum) {
+        Patient pat = new Patient(name, affiliatenum);
         patients.add(pat);
     }
 

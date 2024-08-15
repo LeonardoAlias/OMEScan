@@ -6,21 +6,24 @@ import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import repositories.PatientsRepo;
+
 public class QrGenerator {
     public void Generator(){
-        Path outputPath = Paths.get("C:\\Users\\leoal\\Downloads\\qrs\\hola.png");
-
+        PatientsRepo patientsRepo = PatientsRepo.getInstance();
         try {
-            // Generate QR code and save to specified path
-            File qrCodeFile = QRCode.from("150409569709-01").file();
-            File outputFile = outputPath.toFile();
+            patientsRepo.getPatients().forEach(patient -> {
+                Path outputPath = Paths.get("/home/zhinon/Descargas/qrs/" + patient.affiliatenumToString() + ".png");
+                File qrCodeFile = QRCode.from(patient.affiliatenumToString()).file();
+                File outputFile = outputPath.toFile();
 
-            if (outputFile.exists()) {
-                outputFile.delete();
-            }
+                if (outputFile.exists()) {
+                    outputFile.delete();
+                }
 
-            qrCodeFile.renameTo(outputFile);
-            System.out.println("QR Code generated at: " + outputFile.getAbsolutePath());
+                qrCodeFile.renameTo(outputFile);
+                System.out.println("QR Code generated at: " + outputFile.getAbsolutePath());
+            });
         } catch (Exception e) {
             e.printStackTrace();
         }
