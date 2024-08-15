@@ -2,13 +2,11 @@ package entities;
 
 public class Patient {
     private String name;
-    private String lastname;
     private Long affiliatenum;
 
-    public Patient(String name, String lastname, Long affiliatednum) {
+    public Patient(String name, Long affiliatednum) {
         this.name = name;
-        this.lastname = lastname;
-        this.affiliatednum = affiliatednum;
+        this.affiliatenum = affiliatednum;
     }
 
     public Patient() {
@@ -20,14 +18,6 @@ public class Patient {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getLastname() {
-        return lastname;
-    }
-
-    public void setLastname(String lastname) {
-        this.lastname = lastname;
     }
 
     public Long getAffiliatenum() {

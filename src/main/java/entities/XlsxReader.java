@@ -1,5 +1,5 @@
 package entities;
-
+import repositories.PatientsRepo;
 import com.aspose.cells.Workbook;
 import com.aspose.cells.Worksheet;
 import com.aspose.cells.Cells;
@@ -7,6 +7,7 @@ import com.aspose.cells.WorksheetCollection;
 
 public class XlsxReader {
     public void TurnosFileReader(String fileName) throws Exception {
+
         Workbook wb = null;
         try {
             wb = new Workbook(fileName);
@@ -16,7 +17,9 @@ public class XlsxReader {
         // Obtener todas las hojas de trabajo
         WorksheetCollection collection = wb.getWorksheets();
 
-// Recorra todas las hojas de trabajo
+        PatientsRepo patientsRepo = PatientsRepo.getInstance();
+
+        // Recorra todas las hojas de trabajo
         for (int worksheetIndex = 0; worksheetIndex < collection.getCount(); worksheetIndex++) {
 
             // Obtener hoja de trabajo usando su índice
@@ -29,14 +32,13 @@ public class XlsxReader {
             int rows = worksheet.getCells().getMaxDataRow();
             int cols = worksheet.getCells().getMaxDataColumn();
 
-            // Bucle a través de filas
-            for (int i = 0; i < rows; i++) {
+            // Bucle que recorre todas las filas
+            for (int i = 1; i < rows; i++) {
 
-                // Recorra cada columna en la fila seleccionada
-                for (int j = 0; j < cols; j++) {
-                    // Valor de la celda de impresión
-                    System.out.print(worksheet.getCells().get(i, j).getValue() + " | ");
-                }
+                String value = worksheet.getCells().get(i, 2).getValue().toString();
+                long parsedValue = (long) Double.parseDouble(value);
+                patientsRepo.addPatient(worksheet.getCells().get(i, 3).getValue().toString(), parsedValue);
+
                 // Salto de línea de impresión
                 System.out.println(" ");
             }
