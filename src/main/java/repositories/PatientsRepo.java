@@ -29,9 +29,15 @@ public class PatientsRepo {
         return patients;
     }
 
-    public void addPatient(String name, Long affiliatenum) {
-        Patient pat = new Patient(name, affiliatenum);
-        patients.add(pat);
+    public void addPatient(String name, Long affiliatenum, Long ome) {
+        Patient pat = getPatientByAffiliatenum(affiliatenum);
+        if (pat != null) {
+            pat.addOme(ome);
+            return;
+        } else {
+            pat = new Patient(name, affiliatenum, ome);
+            patients.add(pat);
+        }
     }
 
     public Patient getPatientByAffiliatenum(Long affiliatenum) {

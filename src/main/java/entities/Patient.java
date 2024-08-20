@@ -1,12 +1,16 @@
 package entities;
+import java.util.HashSet;
+import java.util.Set;
 
 public class Patient {
     private String name;
     private Long affiliatenum;
+    private Set<Long> omeList = new HashSet<>();
 
-    public Patient(String name, Long affiliatednum) {
+    public Patient(String name, Long affiliatednum, Long ome) {
         this.name = name;
         this.affiliatenum = affiliatednum;
+        this.omeList.add(ome);
     }
 
     public Patient() {
@@ -26,6 +30,14 @@ public class Patient {
 
     public void setAffiliatenum(Long affiliatednum) {
         this.affiliatenum = affiliatednum;
+    }
+
+    public void addOme(Long ome) {
+        this.omeList.add(ome);
+    }
+
+    public Set<Long> getOmeList() {
+        return omeList;
     }
 
     public String affiliatenumToString() {
