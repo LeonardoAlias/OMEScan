@@ -1,4 +1,5 @@
 package entities;
+import repositories.AppointmentsRepo;
 import repositories.PatientsRepo;
 import com.aspose.cells.Workbook;
 import com.aspose.cells.Worksheet;
@@ -16,35 +17,22 @@ public class XlsxReader {
         // Obtener todas las hojas de trabajo
         WorksheetCollection collection = wb.getWorksheets();
 
+        // Obtener hoja de trabajo usando su índice
+        Worksheet worksheet = collection.get(0);
+
         PatientsRepo patientsRepo = PatientsRepo.getInstance();
 
-        // Recorra todas las hojas de trabajo
-        for (int worksheetIndex = 0; worksheetIndex < collection.getCount(); worksheetIndex++) {
+        int rows = worksheet.getCells().getMaxDataRow();
+        for (int i = 1; i < rows; i++) {
+            // Casteamos el valor de la celda a un valor numérico
+            String raw_aff_number = worksheet.getCells().get(i, 2).getValue().toString();
+            long aff_number = (long) Double.parseDouble(raw_aff_number);
 
-            // Obtener hoja de trabajo usando su índice
-            Worksheet worksheet = collection.get(worksheetIndex);
+            String raw_ome = worksheet.getCells().get(i, 0).getValue().toString();
+            long ome_number = (long) Double.parseDouble(raw_ome);
 
-            // Imprimir el nombre de la hoja de trabajo
-            System.out.print("Worksheet: " + worksheet.getName());
-
-            // Obtener el número de filas
-            int rows = worksheet.getCells().getMaxDataRow();
-
-            // Bucle que recorre todas las filas
-            for (int i = 1; i < rows; i++) {
-                // Casteamos el valor de la celda a un valor numérico
-                String raw_aff_number = worksheet.getCells().get(i, 2).getValue().toString();
-                long aff_number = (long) Double.parseDouble(raw_aff_number);
-
-                String raw_ome = worksheet.getCells().get(i, 0).getValue().toString();
-                long ome_number = (long) Double.parseDouble(raw_ome);
-
-                patientsRepo.addPatient(worksheet.getCells().get(i, 3).getValue().toString(), aff_number, ome_number);
-                // Salto de línea de impresión
-                System.out.println(" ");
-            }
+            patientsRepo.addPatient(worksheet.getCells().get(i, 3).getValue().toString(), aff_number, ome_number);
         }
-
     }
 
     public void ListadoCajaReader(String fileName) throws Exception {
@@ -57,35 +45,27 @@ public class XlsxReader {
         // Obtener todas las hojas de trabajo
         WorksheetCollection collection = wb.getWorksheets();
 
-        PatientsRepo patientsRepo = PatientsRepo.getInstance();
+        AppointmentsRepo appointmentRepo = AppointmentsRepo.getInstance();
 
-        // Recorra todas las hojas de trabajo
-        for (int worksheetIndex = 0; worksheetIndex < collection.getCount(); worksheetIndex++) {
+        Worksheet worksheet = collection.get(0);
+        int rows = worksheet.getCells().getMaxDataRow();
 
-            // Obtener hoja de trabajo usando su índice
-            Worksheet worksheet = collection.get(worksheetIndex);
+        // Bucle que recorre todas las filas
+        for (int i = 1; i < rows; i++) {
+            // Casteamos el valor de la celda a un valor numérico
+            String raw_app_number = worksheet.getCells().get(i, 3).getValue().toString();
+            long app_number = (long) Double.parseDouble(raw_app_number);
 
-            // Imprimir el nombre de la hoja de trabajo
-            System.out.print("Worksheet: " + worksheet.getName());
-
-            // Obtener el número de filas
-            int rows = worksheet.getCells().getMaxDataRow();
-
-            // Bucle que recorre todas las filas
-            for (int i = 1; i < rows; i++) {
-                // Casteamos el valor de la celda a un valor numérico
-                String raw_aff_number = worksheet.getCells().get(i, 2).getValue().toString();
-                long aff_number = (long) Double.parseDouble(raw_aff_number);
-
-                String raw_ome = worksheet.getCells().get(i, 0).getValue().toString();
-                long ome_number = (long) Double.parseDouble(raw_ome);
-
-                patientsRepo.addPatient(worksheet.getCells().get(i, 3).getValue().toString(), aff_number, ome_number);
-
-                // Salto de línea de impresión
-                System.out.println(" ");
+            String raw_ome = worksheet.getCells().get(i, 8).getValue().toString();
+            long ome_number;
+            if (!raw_ome.isEmpty()) {
+                ome_number = (long) Double.parseDouble(raw_ome);
+            } else {
+                ome_number = 0; // Or any other default value you want to assign
             }
+            appointmentRepo.addAppointment(app_number, ome_number);
         }
+
     }
 
     public void ListadoTurnosReader(String fileName) throws Exception {
@@ -95,36 +75,29 @@ public class XlsxReader {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-        // Obtener todas las hojas de trabajo
         WorksheetCollection collection = wb.getWorksheets();
 
-        PatientsRepo patientsRepo = PatientsRepo.getInstance();
+        AppointmentsRepo appointmentsRepo = AppointmentsRepo.getInstance();
 
-        // Recorra todas las hojas de trabajo
-        for (int worksheetIndex = 0; worksheetIndex < collection.getCount(); worksheetIndex++) {
+        Worksheet worksheet = collection.get(0);
 
-            // Obtener hoja de trabajo usando su índice
-            Worksheet worksheet = collection.get(worksheetIndex);
+        int rows = worksheet.getCells().getMaxDataRow();
 
-            // Imprimir el nombre de la hoja de trabajo
-            System.out.print("Worksheet: " + worksheet.getName());
+        for (int i = 1; i < rows; i++) {
+            // Casteamos el valor de la celda a un valor numérico
+            String raw_app_number = worksheet.getCells().get(i, 0).getValue().toString();
+            long app_number = (long) Double.parseDouble(raw_app_number);
 
-            // Obtener el número de filas
-            int rows = worksheet.getCells().getMaxDataRow();
+            String service = worksheet.getCells().get(i, 11).getValue().toString();
 
-            // Bucle que recorre todas las filas
-            for (int i = 1; i < rows; i++) {
-                // Casteamos el valor de la celda a un valor numérico
-                String raw_aff_number = worksheet.getCells().get(i, 2).getValue().toString();
-                long aff_number = (long) Double.parseDouble(raw_aff_number);
+            String status = worksheet.getCells().get(i, 17).getValue().toString();
 
-                String raw_ome = worksheet.getCells().get(i, 0).getValue().toString();
-                long ome_number = (long) Double.parseDouble(raw_ome);
-
-                patientsRepo.addPatient(worksheet.getCells().get(i, 3).getValue().toString(), aff_number, ome_number);
-
-                // Salto de línea de impresión
-                System.out.println(" ");
+            Appointment appObject = appointmentsRepo.getAppointmentById(app_number);
+            if (appObject != null) {
+                appObject.setService(service);
+                appObject.setStatus(status);
+            }else{
+                System.out.println("Algo anduvo mal que no se encontró el turno");
             }
         }
     }

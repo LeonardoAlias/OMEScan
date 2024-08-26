@@ -1,5 +1,7 @@
 package repositories;
 
+import entities.Appointment;
+import entities.OME;
 import entities.Patient;
 
 import java.util.ArrayList;
@@ -44,6 +46,17 @@ public class PatientsRepo {
         for (Patient pat : patients) {
             if (affiliatenum.equals(pat.getAffiliatenum())) {
                 return pat;
+            }
+        }
+        return null;
+    }
+
+    public Patient getPatientByOmeId(Long omeId) {
+        for (Patient pat : patients) {
+            for (OME ome : pat.getOmeList()) {
+                if (omeId.equals(ome.getOmeId())) {
+                    return pat;
+                }
             }
         }
         return null;
