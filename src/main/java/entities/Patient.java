@@ -5,15 +5,12 @@ import java.util.Set;
 public class Patient {
     private String name;
     private Long affiliatenum;
-    private Set<Long> omeList = new HashSet<>();
+    private Set<OME> omeList = new HashSet<>();
 
     public Patient(String name, Long affiliatednum, Long ome) {
         this.name = name;
         this.affiliatenum = affiliatednum;
-        this.omeList.add(ome);
-    }
-
-    public Patient() {
+        this.omeList.add(new OME(ome, this));
     }
 
     public String getName() {
@@ -33,10 +30,10 @@ public class Patient {
     }
 
     public void addOme(Long ome) {
-        this.omeList.add(ome);
+        this.omeList.add(new OME(ome, this));
     }
 
-    public Set<Long> getOmeList() {
+    public Set<OME> getOmeList() {
         return omeList;
     }
 
