@@ -29,7 +29,7 @@ public class Appointment {
     }
 
     public void setService(String service) {
-        this.service = service;
+        this.service = service.trim();
     }
 
     public String getService() {
@@ -51,5 +51,15 @@ public class Appointment {
 
     public Boolean isStatusValid() {
         return this.status.equals("REA");
+    }
+
+    @Override
+    public String toString() {
+        return "Appointment{" +
+                "service='" + service + '\'' +
+                ", status='" + status + '\'' +
+                ", appointmentId=" + appointmentId +
+                ", omeList=" + omeList +
+                '}';
     }
 }

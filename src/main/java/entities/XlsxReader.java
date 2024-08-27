@@ -23,7 +23,7 @@ public class XlsxReader {
         PatientsRepo patientsRepo = PatientsRepo.getInstance();
 
         int rows = worksheet.getCells().getMaxDataRow();
-        for (int i = 1; i < rows; i++) {
+        for (int i = 1; i <= rows; i++) {
             // Casteamos el valor de la celda a un valor numérico
             String raw_aff_number = worksheet.getCells().get(i, 2).getValue().toString();
             long aff_number = (long) Double.parseDouble(raw_aff_number);
@@ -33,6 +33,7 @@ public class XlsxReader {
 
             patientsRepo.addPatient(worksheet.getCells().get(i, 3).getValue().toString(), aff_number, ome_number);
         }
+        // patientsRepo.getPatients().forEach(System.out::println);
     }
 
     public void ListadoCajaReader(String fileName) throws Exception {
@@ -51,7 +52,7 @@ public class XlsxReader {
         int rows = worksheet.getCells().getMaxDataRow();
 
         // Bucle que recorre todas las filas
-        for (int i = 1; i < rows; i++) {
+        for (int i = 1; i <= rows; i++) {
             // Casteamos el valor de la celda a un valor numérico
             String raw_app_number = worksheet.getCells().get(i, 3).getValue().toString();
             long app_number = (long) Double.parseDouble(raw_app_number);
@@ -65,6 +66,7 @@ public class XlsxReader {
             }
             appointmentRepo.addAppointment(app_number, ome_number);
         }
+        // appointmentRepo.getAppointments().forEach(System.out::println);
 
     }
 
@@ -83,7 +85,7 @@ public class XlsxReader {
 
         int rows = worksheet.getCells().getMaxDataRow();
 
-        for (int i = 1; i < rows; i++) {
+        for (int i = 1; i <= rows; i++) {
             // Casteamos el valor de la celda a un valor numérico
             String raw_app_number = worksheet.getCells().get(i, 0).getValue().toString();
             long app_number = (long) Double.parseDouble(raw_app_number);
@@ -100,6 +102,8 @@ public class XlsxReader {
                 System.out.println("Algo anduvo mal que no se encontró el turno");
             }
         }
+        // appointmentsRepo.getAppointments().forEach(System.out::println);
+
     }
 
 }
