@@ -43,4 +43,13 @@ public class Patient {
         String lastTwoDigits = numberStr.substring(numberStr.length() - 2);
         return mainPart + "-" + lastTwoDigits;
     }
+
+    @Override
+    public String toString() {
+        return "Patient{" +
+                "name='" + name + '\'' +
+                ", affiliatenum=" + affiliatenum +
+                ", omeList=" + omeList +
+                '}';
+    }
 }

@@ -43,8 +43,8 @@ public class OME {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        OME persona = (OME) o;
-        return omeId == persona.omeId;
+        OME ome_ob = (OME) o;
+        return omeId.equals(ome_ob.omeId);
     }
 
     @Override
@@ -54,5 +54,10 @@ public class OME {
 
     public Long getOmeId() {
         return omeId;
+    }
+
+    @Override
+    public String toString() {
+        return String.valueOf(omeId);
     }
 }
