@@ -1,21 +1,33 @@
 package GUI;
 
 import javax.swing.*;
-
 import entities.QrGenerator;
 import entities.XlsxReader;
-
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.util.ArrayList;
+import controllers.PatientFilterController;
+import entities.Patient;
+import repositories.PatientsRepo;
+import GUI.QRTableDisplay;
+
 
 public class FileChooserApp extends JFrame implements ActionListener{
     private JButton btnChooseFile1, btnChooseFile2, btnChooseFile3, btnRunApp;
     private JLabel lblFile1, lblFile2, lblFile3;
     private File file1, file2, file3;
+    private File lastDirectory;
 
     public FileChooserApp() {
+        // Establecer Nimbus Look and Feel para una apariencia más moderna
+        try {
+            UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         setTitle("Seleccionar Archivos");
         setSize(500, 300);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -64,7 +76,6 @@ public class FileChooserApp extends JFrame implements ActionListener{
                 try {
                     runApp();
                 } catch (Exception e1) {
-                    // TODO Auto-generated catch block
                     e1.printStackTrace();
                 }
             } else {
@@ -75,9 +86,18 @@ public class FileChooserApp extends JFrame implements ActionListener{
 
     private File chooseFile(JLabel label) {
         JFileChooser fileChooser = new JFileChooser();
+        if (lastDirectory != null) {
+            fileChooser.setCurrentDirectory(lastDirectory);
+        }
+        // Mejorar el diseño del JFileChooser
+        fileChooser.setDialogTitle("Seleccione un archivo");
+        fileChooser.setAcceptAllFileFilterUsed(false);
+        fileChooser.addChoosableFileFilter(new javax.swing.filechooser.FileNameExtensionFilter("Archivos Excel", "xlsx", "xls"));
+
         int result = fileChooser.showOpenDialog(this);
         if (result == JFileChooser.APPROVE_OPTION) {
             File selectedFile = fileChooser.getSelectedFile();
+            lastDirectory = fileChooser.getCurrentDirectory(); // Guarda la última ubicación
             label.setText("Seleccionado: " + selectedFile.getName());
             return selectedFile;
         }
@@ -85,12 +105,19 @@ public class FileChooserApp extends JFrame implements ActionListener{
     }
 
     private void runApp() throws Exception {
+
         XlsxReader xr = new XlsxReader();
         xr.ListadoCupReader(file1.getAbsolutePath());
         xr.ListadoCajaReader(file2.getAbsolutePath());
         xr.ListadoTurnosReader(file3.getAbsolutePath());
-        QrGenerator qrg = new QrGenerator();
-        qrg.Generator();
+        PatientFilterController pfc = new PatientFilterController();
+        ArrayList<Patient> curated_patients = pfc.filterPatients();
+
+        QRTableDisplay qrTableDisplay = new QRTableDisplay(curated_patients);
+        qrTableDisplay.setVisible(true);
+        setVisible(false);
+
+
     }
 
     public static void main(String[] args) {

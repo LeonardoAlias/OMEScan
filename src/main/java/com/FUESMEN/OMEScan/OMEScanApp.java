@@ -10,7 +10,6 @@ public class OMEScanApp {
         xr.ListadoCupReader("/home/zhinon/Descargas/bandeja_transmision_1.xlsx");
         xr.ListadoCajaReader("/home/zhinon/Descargas/Listado1.xlsx");
         xr.ListadoTurnosReader("/home/zhinon/Descargas/Turno1.xlsx");
-        QrGenerator qrg = new QrGenerator();
-        qrg.Generator();
+
     }
 }

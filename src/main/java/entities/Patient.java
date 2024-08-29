@@ -37,6 +37,14 @@ public class Patient {
         return omeList;
     }
 
+    public String getOmeListToString() {
+        StringBuilder omeListString = new StringBuilder();
+        for (OME ome : this.omeList) {
+            omeListString.append(ome.getOmeId()).append(", ");
+        }
+        return omeListString.toString();
+    }
+
     public String affiliatenumToString() {
         String numberStr = Long.toString(this.affiliatenum);
         String mainPart = numberStr.substring(0, numberStr.length() - 2);
