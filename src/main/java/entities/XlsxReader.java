@@ -3,7 +3,6 @@ import repositories.AppointmentsRepo;
 import repositories.PatientsRepo;
 import com.aspose.cells.Workbook;
 import com.aspose.cells.Worksheet;
-import com.aspose.cells.Cells;
 import com.aspose.cells.WorksheetCollection;
 
 public class XlsxReader {
@@ -60,9 +59,14 @@ public class XlsxReader {
             String raw_ome = worksheet.getCells().get(i, 8).getValue().toString();
             long ome_number;
             if (!raw_ome.isEmpty()) {
-                ome_number = (long) Double.parseDouble(raw_ome);
+                try {
+                    ome_number = (long) Double.parseDouble(raw_ome);
+                } catch (NumberFormatException e) {
+                    System.out.println("Error al parsear el número de OME: " + raw_ome);
+                    continue;
+                }
             } else {
-                ome_number = 0; // Or any other default value you want to assign
+                continue;
             }
             appointmentRepo.addAppointment(app_number, ome_number);
         }
@@ -98,8 +102,6 @@ public class XlsxReader {
             if (appObject != null) {
                 appObject.setService(service);
                 appObject.setStatus(status);
-            }else{
-                System.out.println("Algo anduvo mal que no se encontró el turno");
             }
         }
         // appointmentsRepo.getAppointments().forEach(System.out::println);

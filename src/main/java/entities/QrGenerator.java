@@ -1,43 +1,28 @@
 package entities;
 
-import net.glxn.qrgen.javase.QRCode;
+import java.awt.image.BufferedImage;
+import java.awt.*;
 
-import java.io.File;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.Set;
 
-import repositories.AppointmentsRepo;
-import repositories.PatientsRepo;
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.WriterException;
+import com.google.zxing.qrcode.QRCodeWriter;
+
 
 public class QrGenerator {
-    public void Generator(){
-        PatientsRepo patientsRepo = PatientsRepo.getInstance();
-        AppointmentsRepo appointmentsRepo = AppointmentsRepo.getInstance();
-        try {
-            appointmentsRepo.getValidAppointments().forEach(appointment -> {
-                Set<OME> omeList = appointment.getOmeList();
-                for (OME ome : omeList) {
-                    Patient patient = patientsRepo.getPatientByOmeId(ome.getOmeId());
-                    if (patient == null) {
-                        System.out.println("Patient not found for OME: " + ome.getOmeId());
-                        continue;
-                    }
-                    Path outputPath = Paths.get("/home/zhinon/Descargas/qrs/" + patient.affiliatenumToString() + ".png");
-                    File qrCodeFile = QRCode.from(patient.affiliatenumToString()).file();
-                    File outputFile = outputPath.toFile();
+    public BufferedImage generateQRCodeImage(String qrText) throws WriterException {
+        QRCodeWriter qrCodeWriter = new QRCodeWriter();
+        int width = 300;
+        int height = 300;
+        BufferedImage bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
 
-                    if (outputFile.exists()) {
-                        outputFile.delete();
-                    }
+        com.google.zxing.common.BitMatrix bitMatrix = qrCodeWriter.encode(qrText, BarcodeFormat.QR_CODE, width, height);
 
-                    qrCodeFile.renameTo(outputFile);
-                }
-
-            });
-
-        } catch (Exception e) {
-            e.printStackTrace();
+        for (int x = 0; x < width; x++) {
+            for (int y = 0; y < height; y++) {
+                bufferedImage.setRGB(x, y, bitMatrix.get(x, y) ? Color.BLACK.getRGB() : Color.WHITE.getRGB());
+            }
         }
+        return bufferedImage;
     }
 }
